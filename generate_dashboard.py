@@ -1,0 +1,269 @@
+import json
+
+dashboard = {
+  "annotations": {"list": [{"builtIn": 1, "datasource": {"type": "grafana", "uid": "-- Grafana --"}, "enable": True, "hide": True, "name": "Annotations & Alerts", "type": "dashboard"}]},
+  "editable": True,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "liveNow": False,
+  "panels": [
+    {
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+      "id": 10,
+      "title": "Current Total RPS",
+      "type": "stat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "sum(rate(haproxy_backend_sessions_total{proxy=~\"(auth_back|quiz_back)\"}[30s]))", "refId": "A"}],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "continuous-GrYlRd"},
+          "mappings": [],
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+        "textMode": "auto"
+      }
+    },
+    {
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+      "id": 11,
+      "title": "AI Predicted Total RPS (+1m)",
+      "type": "stat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=~\"(auth_back|quiz_back)\"}[30s]))[2m:5s], 60), 0)", "refId": "A"}],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "purple"},
+          "mappings": [],
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+        "textMode": "auto"
+      }
+    },
+    {
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+      "id": 12,
+      "title": "Total Active Replicas",
+      "type": "stat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "count(container_last_seen{container_label_com_docker_compose_service=~\"(auth-service|quiz-service)\"})", "refId": "A"}],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "green"},
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+        "textMode": "auto"
+      }
+    },
+    {
+      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+      "id": 13,
+      "title": "AI Target Replicas (Est)",
+      "type": "stat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=~\"(auth_back|quiz_back)\"}[30s]))[2m:5s], 60) / 100), 2)", "refId": "A"}],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "orange"},
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+        "textMode": "auto"
+      }
+    },
+    {
+      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 4},
+      "id": 20,
+      "title": "Workload Monitoring: Actual vs AI Prediction (RPS)",
+      "type": "timeseries",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {
+          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))",
+          "legendFormat": "Actual RPS (Auth)",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))",
+          "legendFormat": "Actual RPS (Quiz)",
+          "refId": "B"
+        },
+        {
+          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60), 0)",
+          "legendFormat": "AI Predicted RPS +1m (Auth)",
+          "refId": "C"
+        },
+        {
+          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60), 0)",
+          "legendFormat": "AI Predicted RPS +1m (Quiz)",
+          "refId": "D"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisBorderShow": False,
+            "axisCenteredZero": False,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {"legend": False, "tooltip": False, "viz": False},
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {"type": "linear"},
+            "showPoints": "auto",
+            "spanNulls": False,
+            "stacking": {"group": "A", "mode": "none"},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "mappings": [],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": None}]}
+        },
+        "overrides": [
+          {"matcher": {"id": "byName", "options": "AI Predicted RPS +1m (Auth)"}, "properties": [{"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [5, 5]}}]},
+          {"matcher": {"id": "byName", "options": "AI Predicted RPS +1m (Quiz)"}, "properties": [{"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [5, 5]}}]}
+        ]
+      },
+      "options": {
+        "legend": {"calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": True},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      }
+    },
+    {
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 14},
+      "id": 21,
+      "title": "Proactive Scaling: Actual Replicas vs AI Target",
+      "type": "timeseries",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {
+          "expr": "count(container_last_seen{container_label_com_docker_compose_service=\"auth-service\"})",
+          "legendFormat": "Actual Replicas (Auth)",
+          "refId": "A"
+        },
+        {
+          "expr": "count(container_last_seen{container_label_com_docker_compose_service=\"quiz-service\"})",
+          "legendFormat": "Actual Replicas (Quiz)",
+          "refId": "B"
+        },
+        {
+          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60) / 100), 1)",
+          "legendFormat": "AI Target Replicas (Auth)",
+          "refId": "C"
+        },
+        {
+          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60) / 100), 1)",
+          "legendFormat": "AI Target Replicas (Quiz)",
+          "refId": "D"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisBorderShow": False,
+            "axisCenteredZero": False,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "hideFrom": {"legend": False, "tooltip": False, "viz": False},
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {"type": "linear"},
+            "showPoints": "auto",
+            "spanNulls": False,
+            "stacking": {"group": "A", "mode": "none"},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "mappings": [],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": None}]}
+        },
+        "overrides": [
+          {"matcher": {"id": "byName", "options": "AI Target Replicas (Auth)"}, "properties": [{"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [5, 5]}}]},
+          {"matcher": {"id": "byName", "options": "AI Target Replicas (Quiz)"}, "properties": [{"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [5, 5]}}]}
+        ]
+      },
+      "options": {
+        "legend": {"calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": True},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      }
+    },
+    {
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 22},
+      "id": 1,
+      "title": "CPU Usage (cAdvisor)",
+      "type": "timeseries",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=~\"(auth-service|quiz-service)\"}[30s])) by (container_label_com_docker_compose_service) * 100", "legendFormat": "{{container_label_com_docker_compose_service}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "custom": {"axisPlacement": "auto", "drawStyle": "line", "lineInterpolation": "smooth", "lineWidth": 1, "showPoints": "never", "spanNulls": False}, "mappings": []}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}}
+    },
+    {
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 22},
+      "id": 2,
+      "title": "Memory Usage (cAdvisor)",
+      "type": "timeseries",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "sum(container_memory_working_set_bytes{container_label_com_docker_compose_service=~\"(auth-service|quiz-service)\"}) by (container_label_com_docker_compose_service) / 1024 / 1024", "legendFormat": "{{container_label_com_docker_compose_service}} (MB)", "refId": "A"}],
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "custom": {"axisPlacement": "auto", "drawStyle": "line", "lineInterpolation": "smooth", "lineWidth": 1, "showPoints": "never", "spanNulls": False}, "mappings": []}, "overrides": []},
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}}
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["thesis", "ai-scaling"],
+  "time": {"from": "now-15m", "to": "now"},
+  "timepicker": {},
+  "timezone": "",
+  "title": "Antigravity Telemetry Dashboard (AI Prediction Overview)",
+  "uid": "telemetry-dashboard",
+  "version": 2
+}
+
+with open('/home/dimas/skripsi/grafana/dashboards/dashboard.json', 'w') as f:
+    json.dump(dashboard, f, indent=2)
+
+print("Dashboard updated!")
