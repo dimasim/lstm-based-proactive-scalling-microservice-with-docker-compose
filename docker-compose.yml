@@ -17,7 +17,6 @@ services:
   auth-service:
     build:
       context: ./auth-service
-    container_name: auth-service
     environment:
       DATABASE_URL: ${AUTH_SERVICE_DATABASE_URL}
       PORT: ${AUTH_SERVICE_PORT}
@@ -30,7 +29,6 @@ services:
   quiz-service:
     build:
       context: ./quiz-service
-    container_name: quiz-service
     environment:
       DATABASE_URL: ${QUIZ_SERVICE_DATABASE_URL}
       PORT: ${QUIZ_SERVICE_PORT}
@@ -51,7 +49,7 @@ services:
       - quiz-service
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    image: ghcr.io/google/cadvisor:latest
     container_name: cadvisor
     privileged: true
     devices:
@@ -60,7 +58,8 @@ services:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
       - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/lib/docker/:/rootfs/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
     ports:
       - "${CADVISOR_PORT}:8080"
