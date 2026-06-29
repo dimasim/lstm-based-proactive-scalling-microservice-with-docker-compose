@@ -11,10 +11,10 @@ dashboard = {
     {
       "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
       "id": 10,
-      "title": "Current Total RPS",
+      "title": "Current RPS (Auth)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "sum(rate(haproxy_backend_sessions_total{proxy=~\"(auth_back|quiz_back)\"}[30s]))", "refId": "A"}],
+      "targets": [{"expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "continuous-GrYlRd"},
@@ -35,10 +35,10 @@ dashboard = {
     {
       "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
       "id": 11,
-      "title": "AI Predicted Total RPS (+1m)",
+      "title": "AI Predicted RPS (+1m) (Auth)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=~\"(auth_back|quiz_back)\"}[30s]))[2m:5s], 60), 0)", "refId": "A"}],
+      "targets": [{"expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60), 0)", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "fixed", "fixedColor": "purple"},
@@ -59,10 +59,10 @@ dashboard = {
     {
       "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
       "id": 12,
-      "title": "Total Active Replicas",
+      "title": "Active Replicas (Auth)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "count(container_last_seen{container_label_com_docker_compose_service=~\"(auth-service|quiz-service)\"})", "refId": "A"}],
+      "targets": [{"expr": "count(container_last_seen{container_label_com_docker_compose_service=\"auth-service\"})", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "fixed", "fixedColor": "green"},
@@ -82,10 +82,10 @@ dashboard = {
     {
       "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
       "id": 13,
-      "title": "AI Target Replicas (Est)",
+      "title": "AI Target Replicas (Auth)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=~\"(auth_back|quiz_back)\"}[30s]))[2m:5s], 60) / 100), 2)", "refId": "A"}],
+      "targets": [{"expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60) / 100), 1)", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "fixed", "fixedColor": "orange"},
@@ -103,7 +103,101 @@ dashboard = {
       }
     },
     {
-      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 4},
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 4},
+      "id": 14,
+      "title": "Current RPS (Quiz)",
+      "type": "stat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))", "refId": "A"}],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "continuous-GrYlRd"},
+          "mappings": [],
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+        "textMode": "auto"
+      }
+    },
+    {
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 4},
+      "id": 15,
+      "title": "AI Predicted RPS (+1m) (Quiz)",
+      "type": "stat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60), 0)", "refId": "A"}],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "purple"},
+          "mappings": [],
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+        "textMode": "auto"
+      }
+    },
+    {
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 4},
+      "id": 16,
+      "title": "Active Replicas (Quiz)",
+      "type": "stat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "count(container_last_seen{container_label_com_docker_compose_service=\"quiz-service\"})", "refId": "A"}],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "green"},
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+        "textMode": "auto"
+      }
+    },
+    {
+      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 4},
+      "id": 17,
+      "title": "AI Target Replicas (Quiz)",
+      "type": "stat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60) / 100), 1)", "refId": "A"}],
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "orange"},
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": False},
+        "textMode": "auto"
+      }
+    },
+    {
+      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8},
       "id": 20,
       "title": "Workload Monitoring: Actual vs AI Prediction (RPS)",
       "type": "timeseries",
@@ -167,7 +261,7 @@ dashboard = {
       }
     },
     {
-      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 14},
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 18},
       "id": 21,
       "title": "Proactive Scaling: Actual Replicas vs AI Target",
       "type": "timeseries",
@@ -231,7 +325,7 @@ dashboard = {
       }
     },
     {
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 22},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 26},
       "id": 1,
       "title": "CPU Usage (cAdvisor)",
       "type": "timeseries",
@@ -241,7 +335,7 @@ dashboard = {
       "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}}
     },
     {
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 22},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 26},
       "id": 2,
       "title": "Memory Usage (cAdvisor)",
       "type": "timeseries",
