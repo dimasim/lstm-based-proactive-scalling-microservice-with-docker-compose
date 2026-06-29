@@ -36,7 +36,7 @@
       },
       "targets": [
         {
-          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))",
+          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))",
           "refId": "A"
         }
       ],
@@ -81,7 +81,7 @@
       },
       "targets": [
         {
-          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60), 0)",
+          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))[2m:5s], 60), 0)",
           "refId": "A"
         }
       ],
@@ -172,7 +172,7 @@
       },
       "targets": [
         {
-          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60) / 100), 1)",
+          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))[2m:5s], 60) / 100), 1)",
           "refId": "A"
         }
       ],
@@ -217,7 +217,7 @@
       },
       "targets": [
         {
-          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))",
+          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))",
           "refId": "A"
         }
       ],
@@ -262,7 +262,7 @@
       },
       "targets": [
         {
-          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60), 0)",
+          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))[2m:5s], 60), 0)",
           "refId": "A"
         }
       ],
@@ -353,7 +353,7 @@
       },
       "targets": [
         {
-          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60) / 100), 1)",
+          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))[2m:5s], 60) / 100), 1)",
           "refId": "A"
         }
       ],
@@ -398,22 +398,22 @@
       },
       "targets": [
         {
-          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))",
+          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))",
           "legendFormat": "Actual RPS (Auth)",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))",
+          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))",
           "legendFormat": "Actual RPS (Quiz)",
           "refId": "B"
         },
         {
-          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60), 0)",
+          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))[2m:5s], 60), 0)",
           "legendFormat": "AI Predicted RPS +1m (Auth)",
           "refId": "C"
         },
         {
-          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60), 0)",
+          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))[2m:5s], 60), 0)",
           "legendFormat": "AI Predicted RPS +1m (Quiz)",
           "refId": "D"
         }
@@ -543,12 +543,12 @@
           "refId": "B"
         },
         {
-          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60) / 100), 1)",
+          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))[2m:5s], 60) / 100), 1)",
           "legendFormat": "AI Target Replicas (Auth)",
           "refId": "C"
         },
         {
-          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60) / 100), 1)",
+          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))[2m:5s], 60) / 100), 1)",
           "legendFormat": "AI Target Replicas (Quiz)",
           "refId": "D"
         }
@@ -668,7 +668,7 @@
       },
       "targets": [
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=~\"(auth-service|quiz-service)\"}[30s])) by (container_label_com_docker_compose_service) * 100",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=~\"(auth-service|quiz-service)\"}[10s])) by (container_label_com_docker_compose_service) * 100",
           "legendFormat": "{{container_label_com_docker_compose_service}}",
           "refId": "A"
         }

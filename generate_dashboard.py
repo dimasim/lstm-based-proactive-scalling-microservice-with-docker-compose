@@ -14,7 +14,7 @@ dashboard = {
       "title": "Current RPS (Auth)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))", "refId": "A"}],
+      "targets": [{"expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "continuous-GrYlRd"},
@@ -38,7 +38,7 @@ dashboard = {
       "title": "AI Predicted RPS (+1m) (Auth)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60), 0)", "refId": "A"}],
+      "targets": [{"expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))[2m:5s], 60), 0)", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "fixed", "fixedColor": "purple"},
@@ -85,7 +85,7 @@ dashboard = {
       "title": "AI Target Replicas (Auth)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60) / 100), 1)", "refId": "A"}],
+      "targets": [{"expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))[2m:5s], 60) / 100), 1)", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "fixed", "fixedColor": "orange"},
@@ -108,7 +108,7 @@ dashboard = {
       "title": "Current RPS (Quiz)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))", "refId": "A"}],
+      "targets": [{"expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "continuous-GrYlRd"},
@@ -132,7 +132,7 @@ dashboard = {
       "title": "AI Predicted RPS (+1m) (Quiz)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60), 0)", "refId": "A"}],
+      "targets": [{"expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))[2m:5s], 60), 0)", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "fixed", "fixedColor": "purple"},
@@ -179,7 +179,7 @@ dashboard = {
       "title": "AI Target Replicas (Quiz)",
       "type": "stat",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60) / 100), 1)", "refId": "A"}],
+      "targets": [{"expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))[2m:5s], 60) / 100), 1)", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "fixed", "fixedColor": "orange"},
@@ -204,22 +204,22 @@ dashboard = {
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
       "targets": [
         {
-          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))",
+          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))",
           "legendFormat": "Actual RPS (Auth)",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))",
+          "expr": "sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))",
           "legendFormat": "Actual RPS (Quiz)",
           "refId": "B"
         },
         {
-          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60), 0)",
+          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))[2m:5s], 60), 0)",
           "legendFormat": "AI Predicted RPS +1m (Auth)",
           "refId": "C"
         },
         {
-          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60), 0)",
+          "expr": "clamp_min(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))[2m:5s], 60), 0)",
           "legendFormat": "AI Predicted RPS +1m (Quiz)",
           "refId": "D"
         }
@@ -278,12 +278,12 @@ dashboard = {
           "refId": "B"
         },
         {
-          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[30s]))[2m:5s], 60) / 100), 1)",
+          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"auth_back\"}[10s]))[2m:5s], 60) / 100), 1)",
           "legendFormat": "AI Target Replicas (Auth)",
           "refId": "C"
         },
         {
-          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[30s]))[2m:5s], 60) / 100), 1)",
+          "expr": "clamp_min(ceil(predict_linear(sum(rate(haproxy_backend_sessions_total{proxy=\"quiz_back\"}[10s]))[2m:5s], 60) / 100), 1)",
           "legendFormat": "AI Target Replicas (Quiz)",
           "refId": "D"
         }
@@ -330,7 +330,7 @@ dashboard = {
       "title": "CPU Usage (cAdvisor)",
       "type": "timeseries",
       "datasource": {"type": "prometheus", "uid": "Prometheus"},
-      "targets": [{"expr": "sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=~\"(auth-service|quiz-service)\"}[30s])) by (container_label_com_docker_compose_service) * 100", "legendFormat": "{{container_label_com_docker_compose_service}}", "refId": "A"}],
+      "targets": [{"expr": "sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service=~\"(auth-service|quiz-service)\"}[10s])) by (container_label_com_docker_compose_service) * 100", "legendFormat": "{{container_label_com_docker_compose_service}}", "refId": "A"}],
       "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "custom": {"axisPlacement": "auto", "drawStyle": "line", "lineInterpolation": "smooth", "lineWidth": 1, "showPoints": "never", "spanNulls": False}, "mappings": []}, "overrides": []},
       "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}}
     },
