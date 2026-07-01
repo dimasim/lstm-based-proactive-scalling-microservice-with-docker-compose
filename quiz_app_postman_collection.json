@@ -61,7 +61,7 @@
 			"name": "Quiz",
 			"item": [
 				{
-					"name": "Get Quiz Attempt",
+					"name": "Submit Quiz Answer",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -73,8 +73,17 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question_id\": 1,\n    \"selected_option\": \"Central Processing Unit\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}/quiz",
 							"host": [
@@ -84,7 +93,7 @@
 								"quiz"
 							]
 						},
-						"description": "Access the Quiz API. Requires a valid JWT token."
+						"description": "Submit a quiz answer. Requires a valid JWT token."
 					},
 					"response": []
 				},

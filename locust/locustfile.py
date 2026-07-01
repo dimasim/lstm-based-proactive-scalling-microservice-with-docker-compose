@@ -58,7 +58,19 @@ class QuickstartUser(HttpUser):
         QuickstartUser.attempt_index += 1
 
         # Real JWT token is used
-        response = self.client.get("/quiz", headers=self.headers)
+        question_id = random.choice([1, 2, 3])
+        # Randomly choose correct or wrong answer to simulate student behavior
+        if question_id == 1:
+            selected_option = random.choice(["Central Processing Unit", "Computer Personal Unit", "Control Process Utility"])
+        elif question_id == 2:
+            selected_option = random.choice(["Go", "Python", "Javascript", "PHP"])
+        else:
+            selected_option = random.choice(["PostgreSQL", "MongoDB", "Redis"])
+
+        response = self.client.post("/quiz", json={
+            "question_id": question_id,
+            "selected_option": selected_option
+        }, headers=self.headers)
         
         # Periodically simulate token expiration (every 20 requests)
         if QuickstartUser.attempt_index % 20 == 0:

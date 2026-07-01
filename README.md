@@ -67,7 +67,7 @@ skripsi/
 │   ├── config/config.go       # Env vars (DATABASE_URL, PORT, JWTSecret)
 │   ├── database/database.go   # Koneksi DB + migrasi DDL
 │   ├── middleware/jwt.go      # JWT Bearer validation
-│   ├── handler/quiz.go        # GET /quiz, GET /healthz
+│   ├── handler/quiz.go        # POST /quiz, GET /healthz
 │   ├── model/model.go         # Struct Claims
 │   └── go.mod
 │
@@ -325,10 +325,25 @@ Content-Type: application/json
 ### Quiz Service (`/quiz`)
 
 ```
-GET /quiz
+POST /quiz
 Authorization: Bearer <token>
+Content-Type: application/json
 
-→ 200 { "status": "success", "message": "Quiz loaded", "student_id": "..." }
+{
+  "question_id": 1,
+  "selected_option": "Central Processing Unit"
+}
+
+→ 200 { 
+        "status": "success", 
+        "correct": true, 
+        "next_question": { 
+          "id": 2, 
+          "text": "...", 
+          "options": [...] 
+        } 
+      }
+→ 400 { "status": "error", "message": "Invalid JSON payload" }
 → 401 { "error": "Invalid token" }
 
 GET /healthz
